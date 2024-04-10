@@ -1,0 +1,5 @@
+{
+    "characters": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/main/src/data/furnishing/en.json",
+    "weapons": "https://raw.githubusercontent.com/MadeBaruna/paimon-moe/main/src/data/weapons/en.json",
+    "uigf": "https://api.uigf.org/translate/"
+}
