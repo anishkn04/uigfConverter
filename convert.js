@@ -3,8 +3,19 @@
 async function convert() {
     const weapons = await getWeapons();
     const characters = await getCharacters();
+    const ID_Dict = {...weapons, ...characters}
     const fileData = await getFileData();
     const accounts = getAccounts(fileData);
+    console.log(
+        "Acquired Data:\n",
+        fileData,
+        accounts,
+        ID_Dict,
+        "\n"
+    );
+    const accountsUIGF = accounts.map(
+        (accountString) => new Account(accountString, fileData, ID_Dict)
+    );
 }
 
 //APIs or such for conversion
@@ -71,11 +82,62 @@ function getAccounts(fileData) {
     });
 }
 
+//Classes required for an account
+class UIGFRoot {
+    constructor(info, list) {
+        this.info = info;
+        this.list = list;
+    }
+}
 
-class Account{
-    accountName;
-    UID;
-    currentTime;
-    allPulls = new Object();
-    UIGF = new Object();
+class UIGFInfo {
+    constructor(uid, lang, currentTime, appName, appVersion, uigfVersion) {
+        this.uid = uid;
+        this.lang = lang;
+        this.export_timestamp = Math.floor(currentTime / 1000);
+        this.export_app = appName;
+        this.export_app_version = appVersion;
+        this.uigf_version = uigfVersion;
+    }
+}
+
+class UIGFListItem {
+    constructor(pmoePull, gachaType, id, ID_Dict) {
+        this.uigf_gacha_type = (gachaType == 400 ? 301 : gachaType);
+        this.gacha_type = gachaType;
+        this.count = pmoePull["pity"];
+        this.time = pmoePull["time"];
+        this.item_id = getId();
+        this.id = id;
+    }
+}
+
+class Account {
+    constructor(accountName, fileData, ID_Dict) {
+        this.accountName = accountName;
+        this.UID = this.getUID(fileData);
+        this.currentTime = new Date().getTime();
+        this.allPulls = this.getPulls(fileData, ID_Dict);
+        this.UIGFRoot = uigfRoot;
+    }
+    getUID(fileData) {
+        return fileData[this.accountName + "wish-uid"];
+    }
+    getPulls(fileData, ID_Dict) {
+        let allPulls = new Array();
+        let currentPullId = parseInt(String(this.UID) + "000000");
+        fileData[this.accountName + "wish-counter-beginners"]["pulls"].forEach(
+            (beginnerPull) => {
+                pullObject = new Object(
+                    beginnerPull,
+                    100,
+                    this.currentPullId++,
+                    ID_Dict[beginnerPull.id]["name"]
+                    //gets name from the paimon moe
+                    //convert this to id and create UIGF    
+                );
+                this.allPulls.push(pullObject);
+            }
+        );
+    }
 }
