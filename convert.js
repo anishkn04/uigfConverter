@@ -196,7 +196,7 @@ class Account {
             });
         } catch (err) {
             if (err.name == "TypeError") {
-                // console.log("Couldn't find any character wishes");
+                console.log("Couldn't find any character wishes");
                 console.log(err);
             } else {
                 console.log(err);
@@ -218,7 +218,7 @@ class Account {
             );
         } catch (err) {
             if (err.name == "TypeError") {
-                // console.log("Couldn't find any standard wishes");
+                console.log("Couldn't find any standard wishes");
                 console.log(err);
             } else {
                 console.log(err);
