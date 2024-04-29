@@ -11,7 +11,8 @@ To convert these ids, I used following source (Paimon.moe - Github) :
 _(No dictionary is provided for the characters, thus I had to use the furnishings for now)_
 
 # How to use
-- Get the json file: paimon.moe -> Settings -> Export & Import Data -> Download Data
+- Get the json file: paimon.moe -> Settings -> Export & Import Data -> Download Data\
+ _(Do not change the file name)_
 - Upload the obtained json file to this site
 
 # Problems

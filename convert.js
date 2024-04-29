@@ -1,10 +1,34 @@
+function changeInputStyle(element){
+    const addedFilesDiv = document.getElementById("addedFiles")
+    const files = element.files;
+    const numOfFiles = files.length;
+    let fileNames = "";
+    for( let index = 0; index < numOfFiles; index++ ){
+        fileNames += `<span> ${files[index].name} </span>`
+    }
+    addedFilesDiv.innerHTML = fileNames;
+    addedFilesDiv.style.display = "flex"
+}
+
+async function convertFiles(){
+    const files = document.getElementById("file").files;
+    const numOfFiles = files.length;
+    if(numOfFiles == 0){
+        alert("Insert some file first!");
+        return;
+    }
+    for( let index = 0; index < numOfFiles; index++ ){
+        await convert(index);
+        console.log("Converted " + files[index].name)
+    }
+}
 //I will refer to "paimon.moe" as "PMOE" for the sake of convenience
 
-async function convert() {
+async function convert(index) {
     const weapons = await getWeapons();
     const characters = await getCharacters();
     const PMOE_Dict = { ...weapons, ...characters };
-    const fileData = await getFileData();
+    const fileData = await getFileData(index);
     const accounts = getAccounts(fileData);
     console.log("Acquired Data:\n", fileData, accounts, PMOE_Dict, "\n");
     const accountsUIGF = [];
@@ -53,16 +77,21 @@ async function getCharacters() {
 }
 
 //Function to get the file from user
-async function getFileData() {
+async function getFileData(index) {
     return new Promise((resolve, reject) => {
-        const file = document.getElementById("file").files[0];
+        const file = document.getElementById("file").files[index];
         if (!file) {
             alert("Please insert a file first!");
             reject("No file selected");
             return;
         }
         if (file.type !== "application/json") {
-            alert("Wrong file type!");
+            alert("Wrong file type! (.json Expected)");
+            reject("Invalid file type");
+            return;
+        }
+        if (!file.name.includes("paimon-moe-local-data")){
+            alert("Provide correct file or do not rename the exported file!");
             reject("Invalid file type");
             return;
         }
