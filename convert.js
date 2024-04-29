@@ -94,11 +94,11 @@ function getAccounts(fileData) {
 
 //Classes required for an account
 class UIGFRoot {
-    constructor(uid, currentTime, allPulls) {
+    constructor(uid, currentDate, allPulls) {
         this.info = new UIGFInfo(
             uid,
             "en-us",
-            currentTime,
+            currentDate,
             "PMOE-Converter",
             "1.0.0",
             "v3.0"
@@ -121,21 +121,35 @@ class UIGFRoot {
 }
 
 class UIGFInfo {
-    constructor(uid, lang, currentTime, appName, appVersion, uigfVersion) {
+    constructor(uid, lang, currentDate, appName, appVersion, uigfVersion) {
         this.uid = uid;
         this.lang = lang;
-        this.export_timestamp = Math.floor(currentTime / 1000);
+        this.export_timestamp = Math.floor(currentDate.getTime() / 1000);
+        this.export_time = this.getTimeInFormat(currentDate)
         this.export_app = appName;
+        this.region_time_zone = this.getRegionTimeZone(this.uid[0])
         this.export_app_version = appVersion;
         this.uigf_version = uigfVersion;
+    }
+    getTimeInFormat(currentDate){
+        const date = currentDate.toISOString().split('T')[0];
+        const time = currentDate.toTimeString().split(' ')[0];
+        return (date + " " + time);
+    }
+    getRegionTimeZone(firstUIDCharacter){
+        switch(firstUIDCharacter){
+            case '6': return -5
+            case '7': return 1
+            default: return 8
+        }
     }
 }
 
 class UIGFListItem {
-    constructor(pmoePull, gachaType, id, itemId) {
+    constructor(pmoePull, gachaType, id) {
         this.uigf_gacha_type = gachaType == 400 ? 301 : gachaType;
         this.gacha_type = gachaType;
-        this.count = pmoePull["pity"];
+        this.count = 1;
         this.time = pmoePull["time"];
         this.item_id = tempIds[pmoePull.itemName];
         this.id = id;
@@ -146,9 +160,9 @@ class Account {
     constructor(accountName, fileData, PMOE_Dict) {
         this.accountName = accountName;
         this.UID = this.getUID(fileData);
-        this.currentTime = new Date().getTime();
+        this.currentDate = new Date();
         this.allPulls = this.getPulls(fileData, PMOE_Dict);
-        this.UIGFRoot = new UIGFRoot(this.UID, this.currentTime, this.allPulls);
+        this.UIGFRoot = new UIGFRoot(this.UID, this.currentDate, this.allPulls);
     }
     getUID(fileData) {
         return fileData[this.accountName + "wish-uid"];
