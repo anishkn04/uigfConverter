@@ -140,8 +140,8 @@ class UIGFRoot {
         allPulls.forEach((singlePull) => {
             let listItem = new UIGFListItem(
                 singlePull,
-                singlePull.gachaType,
-                currentPullId++
+                singlePull.gachaType.toString(),
+                (currentPullId++).toString()
             );
             uigfPulls.push(listItem);
         });
@@ -178,10 +178,15 @@ class UIGFListItem {
     constructor(pmoePull, gachaType, id) {
         this.uigf_gacha_type = gachaType == 400 ? 301 : gachaType;
         this.gacha_type = gachaType;
-        this.count = 1;
+        this.count = "1";
         this.time = pmoePull["time"];
-        this.item_id = tempIds[pmoePull.itemName];
+        this.item_id = this.idInString(pmoePull);
         this.id = id;
+    }
+    idInString(pmoePull){
+        console.log(pmoePull.itemName)
+        const id = tempIds[pmoePull.itemName];
+        return id.toString();
     }
 }
 
@@ -194,11 +199,11 @@ class Account {
         this.UIGFRoot = new UIGFRoot(this.UID, this.currentDate, this.allPulls);
     }
     getUID(fileData) {
-        return fileData[this.accountName + "wish-uid"];
+        return fileData[this.accountName + "wish-uid"].toString();
     }
     getName(PMOEId, PMOE_Dict) {
         if (PMOE_Dict[PMOEId] != undefined) return PMOE_Dict[PMOEId].name;
-        return PMOEId[0].toUpperCase + PMOEId.slice(1);
+        return PMOEId[0].toUpperCase() + PMOEId.slice(1);
     }
     getPulls(fileData, PMOE_Dict) {
         let allPulls = [];
