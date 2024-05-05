@@ -20,4 +20,5 @@ _(No dictionary is provided for the characters, thus I had to use the furnishing
 
 - The in-game IDs are obtained from a pre-defined dictionary instead of calling API.
 \
+\
 Some simple errors and the data are printed to the console too!
