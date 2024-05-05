@@ -1,27 +1,28 @@
-function changeInputStyle(element){
-    const addedFilesDiv = document.getElementById("addedFiles")
+function changeInputStyle(element) {
+    const addedFilesDiv = document.getElementById("addedFiles");
     const files = element.files;
     const numOfFiles = files.length;
     let fileNames = "";
-    for( let index = 0; index < numOfFiles; index++ ){
-        fileNames += `<span> ${files[index].name} </span>`
+    for (let index = 0; index < numOfFiles; index++) {
+        fileNames += `<span> ${files[index].name} </span>`;
     }
     addedFilesDiv.innerHTML = fileNames;
-    addedFilesDiv.style.display = "flex"
+    addedFilesDiv.style.display = "flex";
 }
 
-async function convertFiles(){
+async function convertFiles() {
     const files = document.getElementById("file").files;
     const numOfFiles = files.length;
-    if(numOfFiles == 0){
+    if (numOfFiles == 0) {
         alert("Insert some file first!");
         return;
     }
-    for( let index = 0; index < numOfFiles; index++ ){
+    for (let index = 0; index < numOfFiles; index++) {
         await convert(index);
-        console.log("Converted " + files[index].name)
+        console.log("Converted " + files[index].name);
     }
 }
+
 //I will refer to "paimon.moe" as "PMOE" for the sake of convenience
 
 async function convert(index) {
@@ -46,8 +47,14 @@ function downloadData(data) {
         "data:text/json;charset=utf-8," +
         encodeURIComponent(JSON.stringify(data));
     const dlAnchorElem = document.createElement("a");
+    const monthsExcluded = document.querySelector(
+        ".removeDuplicateRadio:checked"
+    ).value;
     dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", data.info.uid+".json");
+    dlAnchorElem.setAttribute(
+        "download",
+        data.info.uid + `_(:excluding_${monthsExcluded}_months)` + ".json"
+    );
     dlAnchorElem.click();
     dlAnchorElem.remove();
 }
@@ -90,7 +97,7 @@ async function getFileData(index) {
             reject("Invalid file type");
             return;
         }
-        if (!file.name.includes("paimon-moe-local-data")){
+        if (!file.name.includes("paimon-moe-local-data")) {
             alert("Provide correct file or do not rename the exported file!");
             reject("Invalid file type");
             return;
@@ -132,21 +139,36 @@ class UIGFRoot {
             "1.0.0",
             "v3.0"
         );
-        this.list = this.getList(allPulls);
+        this.list = this.getList(allPulls, currentDate);
     }
-    getList(allPulls) {
+    getList(allPulls, currentDate) {
         let uigfPulls = [];
         let currentPullId = parseInt(String(this.info.uid) + "000000");
-        allPulls.forEach((singlePull) => {
-            let listItem = new UIGFListItem(
-                singlePull,
-                singlePull.gachaType.toString(),
-                (currentPullId++).toString()
-            );
-            uigfPulls.push(listItem);
+        const removeDuplicateMonth = parseInt(
+            document.querySelector(".removeDuplicateRadio:checked").value
+        );
+        const filteredPulls = allPulls.map((singlePull) => {
+            const pullTime = new Date(singlePull.time);
+            if (
+                currentDate.getTime() - pullTime.getTime() >
+                2592000000 * removeDuplicateMonth
+            ) {
+                return singlePull;
+            }
+        });
+        filteredPulls.forEach((singlePull) => {
+            if (singlePull != undefined) {
+                let listItem = new UIGFListItem(
+                    singlePull,
+                    singlePull.gachaType.toString(),
+                    (currentPullId++).toString()
+                );
+                uigfPulls.push(listItem);
+            }
         });
         return uigfPulls;
     }
+    convertToList() {}
 }
 
 class UIGFInfo {
@@ -154,22 +176,25 @@ class UIGFInfo {
         this.uid = uid;
         this.lang = lang;
         this.export_timestamp = Math.floor(currentDate.getTime() / 1000);
-        this.export_time = this.getTimeInFormat(currentDate)
+        this.export_time = this.getTimeInFormat(currentDate);
         this.export_app = appName;
-        this.region_time_zone = this.getRegionTimeZone(this.uid[0])
+        this.region_time_zone = this.getRegionTimeZone(this.uid[0]);
         this.export_app_version = appVersion;
         this.uigf_version = uigfVersion;
     }
-    getTimeInFormat(currentDate){
-        const date = currentDate.toISOString().split('T')[0];
-        const time = currentDate.toTimeString().split(' ')[0];
-        return (date + " " + time);
+    getTimeInFormat(currentDate) {
+        const date = currentDate.toISOString().split("T")[0];
+        const time = currentDate.toTimeString().split(" ")[0];
+        return date + " " + time;
     }
-    getRegionTimeZone(firstUIDCharacter){
-        switch(firstUIDCharacter){
-            case '6': return -5
-            case '7': return 1
-            default: return 8
+    getRegionTimeZone(firstUIDCharacter) {
+        switch (firstUIDCharacter) {
+            case "6":
+                return -5;
+            case "7":
+                return 1;
+            default:
+                return 8;
         }
     }
 }
@@ -183,8 +208,8 @@ class UIGFListItem {
         this.item_id = this.idInString(pmoePull);
         this.id = id;
     }
-    idInString(pmoePull){
-        console.log(pmoePull.itemName)
+    idInString(pmoePull) {
+        console.log(pmoePull.itemName);
         const id = tempIds[pmoePull.itemName];
         return id.toString();
     }
@@ -435,6 +460,7 @@ const tempIds = {
     "Calamity Queller": 13507,
     "Engulfing Lightning": 13509,
     "Staff of the Scarlet Sands": 13511,
+    "Crimson Moon's Semblance": 13512,
     "Apprentice's Notes": 14101,
     "Pocket Grimoire": 14201,
     "Magic Guide": 14301,
@@ -595,4 +621,5 @@ const tempIds = {
     Gaming: 10000092,
     Xianyun: 10000093,
     Chiori: 10000094,
+    Arlecchino: 10000096,
 };
