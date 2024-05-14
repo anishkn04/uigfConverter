@@ -53,7 +53,7 @@ function downloadData(data) {
     dlAnchorElem.setAttribute("href", dataStr);
     dlAnchorElem.setAttribute(
         "download",
-        data.info.uid + `_(:excluding_${monthsExcluded}_months)` + ".json"
+        data.info.uid + `(excluding_${monthsExcluded}_months)` + ".json"
     );
     dlAnchorElem.click();
     dlAnchorElem.remove();
@@ -149,10 +149,15 @@ class UIGFRoot {
         );
         const filteredPulls = allPulls.map((singlePull) => {
             const pullTime = new Date(singlePull.time);
-            if (
-                currentDate.getTime() - pullTime.getTime() >
-                2592000000 * removeDuplicateMonth
-            ) {
+            let timeToRemoveInMs;
+            if (removeDuplicateMonth == 6) {
+                timeToRemoveInMs = 15552000000;
+            } else if (removeDuplicateMonth == 12) {
+                timeToRemoveInMs = 31536000000;
+            } else {
+                timeToRemoveInMs = 0;
+            }
+            if (currentDate.getTime() - pullTime.getTime() > timeToRemoveInMs) {
                 return singlePull;
             }
         });

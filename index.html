@@ -9,20 +9,18 @@
     <meta name="keywords"
         content="Paimon moe, genshin, converter, uigf, mihoyo, hoyoverse, moe, paimon, pulls, wish, wish history">
     <script src="./convert.js"></script>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
     <title>UIGF Converter</title>
 </head>
 
 <body>
     <div id="root">
-        <h1>Convert Paimon.moe to UIGF Format! (v3.0)</h1>
+        <h1>Convert <a href="https://paimon.moe/" target="_blank">Paimon.moe<sup>↗️</sup> </a> to <a
+                href="https://uigf.org/" target="_blank">UIGF Format! (v3.0)<sup>↗️</sup></a></h1>
         <div id="main">
             <label for="file" id="insert-file">
-                <span class="material-symbols-outlined">
-                    add
-                </span>
+                📂
             </label>
             <div id="duplicateContainer">
                 Remove recent ____ data to avoid duplicated data?
@@ -49,19 +47,20 @@
                 <div id="addedFiles">---</div>
             </div>
             <input type="file" name="file" id="file" multiple oninput="changeInputStyle(this)">
-            <button onclick="convertFiles()">Convert</button>
+            <button onclick="convertFiles()">Convert 💞</button>
         </div>
         <span>
-            <h2>How to use</h2>
+            <h2>How to use? 🤔</h2>
             <ol>
                 <li>Get the json file: paimon.moe -> Settings -> Export & Import Data -> Download Data</li>
                 <strong>(Do not change the file name i.e File name should be "paimon-moe-local-data....json")</strong>
                 <li>Upload the obtained JSON file to this site</li>
             </ol>
             <br>
-            <h2>Why is there an option to exclude 6 and 12 months?</h2>
+            <h2>Why is there an option to exclude 6 and 12 months? 🤨</h2>
             <ul>
-                <li>The most recent data which is in both file and genshin can conflict and create multiple entries
+                <li>The most recent data which is both in the file and genshin wish history can conflict and create
+                    multiple entries
                     while importing</li>
                 <li>Few versions ago, genshin only stored 6 months of wish data which is now increased to a whole year
                     (i.e 12 months)</li>
