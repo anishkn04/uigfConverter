@@ -27,7 +27,7 @@ h1 a sup {
 #addedFiles {
     margin: 10px;
     flex-direction: column;
-    color: azure;
+    color: #00cc00;
 }
 
 #main {
@@ -74,11 +74,12 @@ button:hover {
 @media screen and (max-width: 800px) {
     #root {
         padding: 20px;
+        gap: 20px;
     }
 
     #main {
-        width: 80%;
-        max-width: 80%;
+        width: 100%;
+        max-width: 100%;
     }
 
     #duplicateContainer {
