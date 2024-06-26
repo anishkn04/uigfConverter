@@ -17,8 +17,6 @@ _(No dictionary is provided for the characters, thus I had to use the furnishing
 
 # Problems
 - The 'furnishings' dictionary itself doesn't have the data for all characters like Kaveh, Yaoyao, etc. (Newer Characters). So, just capitalized their first letter to use as name which works for the current list of characters. But, if a new character is realeased with multiple names (for eg. Kamisato Ayaka) or if a character has any other difference in name than simply `'n'ame`->`'N'ame` (i.e kaveh -> Kaveh) then the converter will not be able to convert that character's name to in-game id which may cause errors.
-
-- The in-game IDs are obtained from a pre-defined dictionary instead of calling API.
 \
 \
 Some simple errors and the data are printed to the console too!
